@@ -32,7 +32,7 @@ class API:
     
     def call(self, endpoint:str, html:bool=False) -> str:
         """
-        Method for sending a single, synchronous API call.
+        Method for making a single, synchronous API call.
         Takes an endpoint string and returns response text.
         
         param endpoint: string, API endpoint to follow base url
@@ -54,8 +54,8 @@ class API:
     
     async def _async_call(self, client:Type[AsyncClient], endpoint:str, html:bool=False) -> str:
         """
-        Hidden method for single API call asynchronously,
-        meant to be batched with the async_calls method.
+        Hidden method for making a single API call asynchronously.
+        Meant to be batched with the async_calls method.
         Takes an endpoint string and returns response text.
         
         param client, httpx AsyncClient object
