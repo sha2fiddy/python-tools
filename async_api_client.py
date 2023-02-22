@@ -95,3 +95,21 @@ class API:
         
         except:
             raise Exception('Error communicating with API')
+
+
+"""
+# Example usage:
+url = 'https://mempool.space/api'
+api = API(url)
+
+blockheight = 750000
+endpoint = f'/block-height/{blockheight}'
+blockhash = api.call(endpoint)
+
+endpoints = [
+    f'/block/{blockhash}',
+    f'/block/{blockhash}/status',
+    f'/block/{blockhash}/txids'
+]
+responses = run(api.async_calls(endpoints))
+"""
