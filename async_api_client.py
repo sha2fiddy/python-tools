@@ -1,5 +1,4 @@
 from time import time
-from json import loads
 from typing import Type
 
 from asyncio import TaskGroup, run  # TaskGroup object was added in Python 3.11
