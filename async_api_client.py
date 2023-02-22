@@ -1,8 +1,8 @@
 from time import time
 from typing import Type
 
-from asyncio import TaskGroup  # TaskGroup object was added in Python 3.11
-from httpx import AsyncClient, HTTPError
+from asyncio import TaskGroup, run  # TaskGroup object was added in Python 3.11
+from httpx import AsyncClient, HTTPError, get
 
 """
 # nest_asyncio is needed in for async code in some environments like Jupyter
@@ -99,8 +99,6 @@ class API:
 
 """
 # Example usage:
-from asyncio import run
-
 url = 'https://mempool.space/api'
 api = API(url)
 
