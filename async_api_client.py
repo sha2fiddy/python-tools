@@ -2,7 +2,7 @@ from time import time
 from typing import Type
 
 from asyncio import TaskGroup  # TaskGroup object was added in Python 3.11
-from httpx import AsyncClient, HTTPError, get
+from httpx import AsyncClient, HTTPError
 
 """
 # nest_asyncio is needed in for async code in some environments like Jupyter
