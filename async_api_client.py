@@ -5,7 +5,7 @@ from asyncio import TaskGroup, run  # TaskGroup object was added in Python 3.11
 from httpx import AsyncClient, HTTPError, get
 
 """
-# nest_asyncio is needed in for async code in some environments like Jupyter
+# nest_asyncio is needed for async code in some environments like Jupyter
 # nest_asyncio requires full asyncio package, your mileage may vary
 import asyncio
 from nest_asyncio import apply as nest
