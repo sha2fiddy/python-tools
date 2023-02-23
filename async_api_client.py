@@ -99,6 +99,23 @@ class API:
         
         except:
             raise Exception('Error communicating with API')
+    
+    
+    def async_calls_wrapper(self, endpoints:list, params:dict=None, html:bool=False) -> list:
+        """
+        Wrapper method for executing the async_calls
+        method without importing asyncio.run.
+        Takes a list of endpoint strings and returns a list of response texts.
+        
+        param: endpoints: list, list of endpoint strings to follow base url
+        param params: dict, default None, optional params object to pass to the API
+        param html: bool, default False, indicicates if HTML docstring responses are accepted
+        """
+        try:
+            return run(api.async_calls(endpoints, params, html))
+        
+        except:
+            raise Exception('Error executing async_calls method')
 
 
 
