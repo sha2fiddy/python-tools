@@ -17,7 +17,8 @@ class API:
     A base client for making API calls using httpx
     and modern features of the asyncio library.
     Includes a call method for a single synchronous API call,
-    and an async_calls method for multiple asyncronous API calls.
+    an async_calls method for multiple asyncronous API calls,
+    and an async_calls_wrapper method to use async_calls synchronously.
     """
     def __init__(self, url:str):
         """
@@ -123,18 +124,15 @@ class API:
 # Example usage:
 url = 'https://mempool.space/api'
 api = API(url)
-
 blockheight = 777777
 endpoint = f'/block-height/{blockheight}'
 blockhash = api.call(endpoint)
-
 endpoints = [
     f'/block/{blockhash}',
     f'/block/{blockhash}/status',
     f'/block/{blockhash}/txids'
 ]
 responses = api.async_calls_wrapper(endpoints)
-
 # OR
 from asyncio import run
 responses = run(api.async_calls_wrapper(endpoints))
