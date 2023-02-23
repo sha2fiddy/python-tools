@@ -121,9 +121,6 @@ class API:
 
 """
 # Example usage:
-from asyncio import run
-
-
 url = 'https://mempool.space/api'
 api = API(url)
 
@@ -136,5 +133,9 @@ endpoints = [
     f'/block/{blockhash}/status',
     f'/block/{blockhash}/txids'
 ]
-responses = run(api.async_calls(endpoints))
+responses = api.async_calls_wrapper(endpoints)
+
+# OR
+from asyncio import run
+responses = run(api.async_calls_wrapper(endpoints))
 """
