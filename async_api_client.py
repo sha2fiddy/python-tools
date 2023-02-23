@@ -99,6 +99,9 @@ class API:
 
 """
 # Example usage:
+from asyncio import run
+
+
 url = 'https://mempool.space/api'
 api = API(url)
 
