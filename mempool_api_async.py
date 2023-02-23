@@ -6,7 +6,7 @@ from pandas import DataFrame, concat, merge, to_datetime, json_normalize
 from async_api_client import API
 
 """
-# nest_asyncio is needed in for async code in some environments like Jupyter
+# nest_asyncio is needed for async code in some environments like Jupyter
 # nest_asyncio requires full asyncio package, your mileage may vary
 import asyncio
 from nest_asyncio import apply as nest
