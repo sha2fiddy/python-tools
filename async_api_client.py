@@ -124,15 +124,18 @@ class API:
 # Example usage:
 url = 'https://mempool.space/api'
 api = API(url)
+
 blockheight = 777777
 endpoint = f'/block-height/{blockheight}'
 blockhash = api.call(endpoint)
+
 endpoints = [
     f'/block/{blockhash}',
     f'/block/{blockhash}/status',
     f'/block/{blockhash}/txids'
 ]
 responses = api.async_calls_wrapper(endpoints)
+
 # OR
 from asyncio import run
 responses = run(api.async_calls_wrapper(endpoints))
