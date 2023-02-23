@@ -138,5 +138,5 @@ responses = api.async_calls_wrapper(endpoints)
 
 # OR
 from asyncio import run
-responses = run(api.async_calls_wrapper(endpoints))
+responses = run(api.async_calls(endpoints))
 """
