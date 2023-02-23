@@ -9,13 +9,12 @@ from httpx import AsyncClient, HTTPError, get
 # nest_asyncio requires full asyncio package, your mileage may vary
 import asyncio
 from nest_asyncio import apply as nest
-
 nest()
 """
 
 class API:
     """
-    A base client for making API calls using httpx,
+    A base client for making API calls using httpx
     and modern features of the asyncio library.
     Includes a call method for a single synchronous API call,
     and an async_calls method for multiple asyncronous API calls.
@@ -29,20 +28,21 @@ class API:
         self.url = url
         
     
-    def call(self, endpoint:str, html:bool=False) -> str:
+    def call(self, endpoint:str, params:dict=None, html:bool=False) -> str:
         """
         Method for making a single, synchronous API call.
         Takes an endpoint string and returns response text.
         
         param endpoint: string, API endpoint to follow base url
+        param params: dict, default None, optional params object to pass to the API
         param html: bool, default False, indicicates if HTML docstring responses are accepted
         """
         try:
-            r = get(self.url + endpoint)
+            r = get(self.url + endpoint, params=params)
             r.raise_for_status()
             if not html and r.text[:15] == '<!doctype html>':
                 print('Unexpetedly received HTML response: ' + self.url + endpoint)
-                print(r.text)
+                print(r.text[:10000] + '\n' + '...')
                 return None
             else:
                 return r.text
@@ -51,7 +51,8 @@ class API:
             raise SystemError(e)
         
     
-    async def _async_call(self, client:Type[AsyncClient], endpoint:str, html:bool=False) -> str:
+    async def _async_call(self, client:Type[AsyncClient], endpoint:str,
+                          params:dict=None, html:bool=False) -> str:
         """
         Hidden method for making a single API call asynchronously.
         Meant to be batched with the async_calls method.
@@ -59,14 +60,15 @@ class API:
         
         param client, httpx AsyncClient object
         param endpoint: string, API endpoint to follow base url
+        param params: dict, default None, optional params object to pass to the API
         param html: bool, default False, indicicates if HTML docstring responses are accepted
         """
         try:
-            r = await client.get(self.url + endpoint)
+            r = await client.get(self.url + endpoint, params=params)
             r.raise_for_status()
             if not html and r.text[:15] == '<!doctype html>':
                 print('Unexpetedly received HTML response: ' + self.url + endpoint)
-                print(r.text)
+                print(r.text[:10000] + '\n' + '...')
                 return None
             else:
                 return r.text
@@ -75,7 +77,7 @@ class API:
             raise SystemError(e)
         
         
-    async def async_calls(self, endpoints:list) -> list:
+    async def async_calls(self, endpoints:list, params:dict=None, html:bool=False) -> list:
         """
         Method for sending multiple API calls asynchronously.
         Takes a list of endpoint strings and returns a list of response texts.
@@ -83,18 +85,21 @@ class API:
         The asyncio TaskGroup object was introduced in Python 3.11.
         
         param: endpoints: list, list of endpoint strings to follow base url
+        param params: dict, default None, optional params object to pass to the API
+        param html: bool, default False, indicicates if HTML docstring responses are accepted
         """
         try:
             print(f'Making {len(endpoints)} calls to: ' + self.url + ' ...')
             start_time = time()
             async with AsyncClient() as client:
                 async with TaskGroup() as tg:
-                    tasks = [tg.create_task(self._async_call(client, e)) for e in endpoints]
+                    tasks = [tg.create_task(self._async_call(client, e, params, html)) for e in endpoints]
                 print('Completed in: %s seconds' % (time() - start_time) + '\n')
                 return [t.result() for t in tasks]
         
         except:
             raise Exception('Error communicating with API')
+
 
 
 """
