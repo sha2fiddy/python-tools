@@ -113,7 +113,7 @@ class API:
         param html: bool, default False, indicicates if HTML docstring responses are accepted
         """
         try:
-            return run(api.async_calls(endpoints, params, html))
+            return run(self.async_calls(endpoints, params, html))
         
         except:
             raise Exception('Error executing async_calls method')
