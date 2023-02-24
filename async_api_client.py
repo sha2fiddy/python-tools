@@ -29,7 +29,7 @@ class API:
         self.url = url
         
     
-    def call(self, endpoint:str, params:dict=None, html:bool=False) -> str:
+    def call(self, endpoint:str='', params:dict=None, html:bool=False) -> str:
         """
         Method for making a single, synchronous API call.
         Takes an endpoint string and returns response text.
@@ -43,7 +43,11 @@ class API:
             r.raise_for_status()
             if not html and r.text[:15] == '<!doctype html>':
                 print('Unexpetedly received HTML response: ' + self.url + endpoint)
-                print(r.text[:10000] + '\n' + '...')
+                print(r.text[:10000])
+                return None
+            elif html and r.text[:15] != '<!doctype html>':
+                print('Expected HTML response but receieved:')
+                print(r.text[:10000])
                 return None
             else:
                 return r.text
