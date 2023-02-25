@@ -1,8 +1,8 @@
 from time import time
 from typing import Type
-
 from asyncio import TaskGroup, run  # TaskGroup object was added in Python 3.11
-from httpx import AsyncClient, HTTPError, get
+
+from httpx import Client, AsyncClient, HTTPError
 
 """
 # nest_asyncio is needed for async code in some environments like Jupyter
@@ -12,6 +12,8 @@ from nest_asyncio import apply as nest
 nest()
 """
 
+# TODO: implement asyncio ExceptionGroup
+
 class API:
     """
     A base client for making API calls using httpx
@@ -20,13 +22,15 @@ class API:
     an async_calls method for multiple asyncronous API calls,
     and an async_calls_wrapper method to use async_calls synchronously.
     """
-    def __init__(self, url:str):
+    def __init__(self, url:str, http2:bool=False):
         """
         Requires API base url to initialize.
         
         param url: string, base url of API
+        param http2: bool, default False, improves async calls if server supports http2
         """
         self.url = url
+        self.http2 = http2
         
     
     def call(self, endpoint:str='', params:dict=None, html:bool=False) -> str:
@@ -39,18 +43,19 @@ class API:
         param html: bool, default False, indicicates if HTML docstring responses are accepted
         """
         try:
-            r = get(self.url + endpoint, params=params)
-            r.raise_for_status()
-            if not html and r.text[:15] == '<!doctype html>':
-                print('Unexpetedly received HTML response: ' + self.url + endpoint)
-                print(r.text[:10000])
-                return None
-            elif html and r.text[:15] != '<!doctype html>':
-                print('Expected HTML response but receieved:')
-                print(r.text[:10000])
-                return None
-            else:
-                return r.text
+            with Client(http2=self.http2) as client:
+                r = client.get(self.url + endpoint, params=params)
+                r.raise_for_status()
+                if not html and r.text[:15] == '<!doctype html>':
+                    print('Unexpetedly received HTML response: ' + self.url + endpoint)
+                    print(r.text[:10000])
+                    return None
+                elif html and r.text[:15] != '<!doctype html>':
+                    print('Expected HTML response but receieved:')
+                    print(r.text[:10000])
+                    return None
+                else:
+                    return r.text
 
         except HTTPError as e:
             raise SystemError(e)
@@ -96,7 +101,7 @@ class API:
         try:
             print(f'Making {len(endpoints)} calls to: ' + self.url + ' ...')
             start_time = time()
-            async with AsyncClient() as client:
+            async with AsyncClient(http2=self.http2) as client:
                 async with TaskGroup() as tg:
                     tasks = [tg.create_task(self._async_call(client, e, params, html)) for e in endpoints]
                 print('Completed in: %s seconds' % (time() - start_time) + '\n')
