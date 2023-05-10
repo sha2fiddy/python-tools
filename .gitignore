@@ -14,7 +14,7 @@ logs/*
 **/*DEV*
 
 # Virtual environment
-venv/*
+**/*venv/*
 
 # DS Store
 .DS_Store
