@@ -1,9 +1,25 @@
-venv/
+# AWS conf files
+**/*aws/*
+**/*.aws/*
 
+# Data files, include data dir
+data/*
+!data/.placeholder
+
+# Log files, include logs dir
+logs/*
+!logs/.placeholder
+
+# Local DEV files
+**/*DEV*
+
+# Virtual environment
+venv/*
+
+# DS Store
 .DS_Store
 
-*.DEV.py
-
+---
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
